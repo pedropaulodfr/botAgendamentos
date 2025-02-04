@@ -94,4 +94,5 @@ def agendamento_handlers(bot):
 
         # Limpa a lista para o próximo agendamento
         dados_agendamento.clear()
+        bot.send_message(message.chat.id, mensagem_restart())
         return

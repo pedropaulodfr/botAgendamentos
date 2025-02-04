@@ -31,7 +31,7 @@ def agendamento_handlers(bot):
     def receber_servico(message):
         servico = message.text
         dados_agendamento.append(servico)
-        bot.send_message(message.chat.id, "Digite uma data:")
+        bot.send_message(message.chat.id, "Para qual data deseja agendar?:")
         bot.send_message(message.chat.id, "Exemplo: " + datetime.now().strftime("%d/%m/%Y"))
         bot.register_next_step_handler(message, receber_data)
 

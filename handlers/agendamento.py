@@ -3,6 +3,9 @@ from telebot.types import ForceReply
 from keyboards import horarios_disponiveis, servicos_disponiveis
 from database import salvar_agendamento, select
 from datetime import date, datetime
+from validators.servico import verificar_servico
+from validators.data import verificar_data
+from utils.message import mensagem_restart
 
 # LIsta para armazenar os dados do agendamento
 dados_agendamento = []
@@ -37,6 +40,20 @@ def agendamento_handlers(bot):
             data = datetime.strptime(message.text, "%d/%m/%Y")
             data_formatada = data.strftime("%Y-%m-%d")
             
+            validacaoData = verificar_data(message.text) 
+            
+            if validacaoData == False:
+                bot.send_message(message.chat.id, "❌ A data selecionada já passou! Por favor, escolha a data de hoje ou uma data futura.")
+                bot.register_next_step_handler(message, receber_data)
+                return
+            
+            # Verificar se já há um agendamento aberto desse usuário para o serviço selecionado
+            temServico = verificar_servico(dados_agendamento[2], message.text, message.chat.id)
+            if temServico:
+                bot.send_message(message.chat.id, "❌ Você já possui um agendamento ativo para este serviço. Não é necessário agendar novamente!")
+                bot.send_message(message.chat.id, mensagem_restart())
+                return
+            
             teclado_horarios = horarios_disponiveis(message.text)
             
             if teclado_horarios:
@@ -47,8 +64,7 @@ def agendamento_handlers(bot):
                 bot.send_message(message.chat.id, "❌ Não há horários disponíveis para esta data. Por favor, escolha outra data.")
                 bot.register_next_step_handler(message, receber_data)
         except ValueError:
-            bot.send_message(
-            message.chat.id, f"❌ Data inválida! Por favor, digite a data no formato **dd/mm/aaaa**.\nExemplo: {datetime.now().strftime('%d/%m/%Y')}")
+            bot.send_message(message.chat.id, f"❌ Data inválida! Por favor, digite a data no formato **dd/mm/aaaa**.\nExemplo: {datetime.now().strftime('%d/%m/%Y')}")
             # Registra novamente o handler para receber a data correta
             bot.register_next_step_handler(message, receber_data)
         
@@ -70,11 +86,12 @@ def agendamento_handlers(bot):
         # Exibe as informações contidas em dados_agendamento
         bot.send_message(
             message.chat.id,
-            f"Agendamento confirmado para {dados_agendamento[0]}!\n"
-            f"Serviço: {dados_agendamento[2]}\n"
-            f"Telefone: {dados_agendamento[1]}\n"
-            f"Data e Hora: {datetime.strptime(dados_agendamento[3], '%Y-%m-%d').strftime('%d/%m/%Y')} às {dados_agendamento[4]}"
+            f"✅ Agendamento confirmado para {dados_agendamento[0]}!\n"
+            f"💼 Serviço: {dados_agendamento[2]}\n"
+            f"📞 Telefone: {dados_agendamento[1]}\n"
+            f"📅 Data e Hora: {datetime.strptime(dados_agendamento[3], '%Y-%m-%d').strftime('%d/%m/%Y')} às {dados_agendamento[4]}"
         )
 
         # Limpa a lista para o próximo agendamento
         dados_agendamento.clear()
+        return

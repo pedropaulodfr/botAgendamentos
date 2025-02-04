@@ -38,7 +38,6 @@ def horarios_disponiveis(data_agendamento):
 
 def servicos_disponiveis():
     servicos = select('''SELECT "Identificacao" FROM "Servicos"''')
-    print(servicos)
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     for servico in servicos:
         markup.add(KeyboardButton(servico[0]))

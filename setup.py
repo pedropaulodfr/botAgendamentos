@@ -33,7 +33,6 @@ setup(
         "playsound==1.3.0",
         "psycopg2==2.9.10",
         "pycparser==2.21",
-        "pymssql==2.3.2",
         "pyOpenSSL==22.0.0",
         "PySocks==1.7.1",
         "pyTelegramBotAPI==4.26.0",

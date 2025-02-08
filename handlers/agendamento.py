@@ -23,7 +23,7 @@ def agendamento_handlers(bot):
         bot.register_next_step_handler(message, receber_telefone)
     
     def receber_telefone(message):
-        telefone = message.text
+        telefone = str(message.text).replace("(", "").replace(")", "").replace("-", "").replace(" ", "")
         dados_agendamento.append(telefone)
         bot.send_message(message.chat.id, "Escolha um serviço:", reply_markup=servicos_disponiveis())
         bot.register_next_step_handler(message, receber_servico)

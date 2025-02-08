@@ -1,6 +1,7 @@
 certifi
 cffi
 charset-normalizer
+Flask
 gunicorn
 idna
 importlib-metadata

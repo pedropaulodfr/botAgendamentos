@@ -3,6 +3,14 @@ from config import TOKEN
 from handlers.start import start
 from handlers.agendamento import agendamento_handlers
 from handlers.visualizar import visualizar_handlers
+from flask import Flask
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def home():
+    None
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -13,3 +21,5 @@ visualizar_handlers(bot)
 
 print("Bot está rodando...")
 bot.polling()
+
+app.run("0.0.0.0")

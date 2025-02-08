@@ -17,7 +17,7 @@ def verificar_servico(servico, data_agendamento, user_id):
         INNER JOIN "Servicos" S ON A."Servico" = S."Identificacao"
         WHERE S."Identificacao" = '{servico}'
         AND TO_CHAR(A."Data", 'DD/MM/YYYY') = '{data_agendamento}'
-        AND COALESCE(A."Executado", B'0') = B'0'
+        AND COALESCE(A."Executado", False) = False
         AND A."Usuario_Id" = {user_id}
     ''')
     

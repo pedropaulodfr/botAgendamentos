@@ -37,7 +37,7 @@ def horarios_disponiveis(data_agendamento):
     return markup
 
 def servicos_disponiveis():
-    servicos = select('''SELECT "Identificacao" FROM "Servicos"''')
+    servicos = select('''SELECT "Identificacao" FROM "Servicos" WHERE COALESCE("Ativo", True) = True''')
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     for servico in servicos:
         markup.add(KeyboardButton(servico[0]))

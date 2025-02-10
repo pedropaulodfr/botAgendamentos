@@ -15,4 +15,5 @@ agendamento_handlers(bot)
 visualizar_handlers(bot)
 
 print("Bot está rodando...")
-bot.infinity_polling()
+bot.remove_webhook()
+bot.polling()

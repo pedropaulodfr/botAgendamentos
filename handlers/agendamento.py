@@ -1,6 +1,6 @@
 import telebot
-from telebot.types import ForceReply
-from keyboards import horarios_disponiveis, servicos_disponiveis
+from telebot.types import ForceReply, ReplyKeyboardRemove
+from keyboards import horarios_disponiveis, servicos_disponiveis, datas_disponiveis
 from database import salvar_agendamento, select
 from datetime import date, datetime
 from validators.servico import verificar_servico
@@ -31,9 +31,11 @@ def agendamento_handlers(bot):
     def receber_servico(message):
         servico = message.text
         dados_agendamento.append(servico)
-        bot.send_message(message.chat.id, "Para qual data deseja agendar?")
-        bot.send_message(message.chat.id, "Exemplo: " + datetime.now().strftime("%d/%m/%Y"))
-        bot.register_next_step_handler(message, receber_data)
+        teclado_datas = datas_disponiveis()
+
+        if teclado_datas:
+            bot.send_message(message.chat.id, "Escolha uma data disponível:", reply_markup=teclado_datas)
+            bot.register_next_step_handler(message, receber_data)
 
     def receber_data(message):
         try:
@@ -89,7 +91,8 @@ def agendamento_handlers(bot):
             f"✅ Agendamento confirmado para {dados_agendamento[0]}!\n"
             f"💼 Serviço: {dados_agendamento[2]}\n"
             f"📞 Telefone: {dados_agendamento[1]}\n"
-            f"📅 Data e Hora: {datetime.strptime(dados_agendamento[3], '%Y-%m-%d').strftime('%d/%m/%Y')} às {dados_agendamento[4]}"
+            f"📅 Data e Hora: {datetime.strptime(dados_agendamento[3], '%Y-%m-%d').strftime('%d/%m/%Y')} às {dados_agendamento[4]}",
+            reply_markup=ReplyKeyboardRemove()
         )
 
         # Limpa a lista para o próximo agendamento

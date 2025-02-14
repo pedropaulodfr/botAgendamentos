@@ -22,7 +22,6 @@ def salvar_agendamento(nome, telefone, horario, servico, user_id):
 def buscar_agendamentos(user_id):
     conn = conectar()
     cursor = conn.cursor()
-    """ query = "SELECT Nome, Telefone, CONVERT(VARCHAR, Data, 103), CONVERT(VARCHAR(5), Data, 108), Servico FROM Agendamentos WHERE ISNULL(Confirmado, 0) = 0 AND Usuario_Id = ?" """
     query = '''SELECT "Nome", "Telefone", TO_CHAR("Data", 'HH24:MI'), TO_CHAR("Data", 'DD/MM/YYYY'), "Servico" FROM "Agendamentos" WHERE COALESCE("Executado", False) = False AND "Usuario_Id" = %s'''
     cursor.execute(query, (user_id,))
     results = cursor.fetchall()

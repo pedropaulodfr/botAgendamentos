@@ -1,7 +1,7 @@
 ### Botões do MENU
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 from database import select
-from datetime import datetime
+from datetime import datetime, date
 
 
 def menu_principal():
@@ -9,15 +9,31 @@ def menu_principal():
     markup.add(KeyboardButton("Agendar"), KeyboardButton("Visualizar Agendamento"))
     return markup
 
+def datas_disponiveis():
+    dia_atual = datetime.now().day
+    mes_atual = datetime.now().month
+    ano_atual = datetime.now().year
+    primeiro_dia = date(ano_atual, mes_atual, 1)
+
+    if(datetime.now().month == 12):
+        proximo_mes = date(ano_atual + 1, 1, 1)
+    else:
+        proximo_mes = date(ano_atual, mes_atual + 1, 1)
+    
+    dias_no_mes = (proximo_mes - primeiro_dia).days
+
+    lista_dias = []
+
+    for i in range(dias_no_mes):
+        if (i + 1) >= dia_atual:
+            lista_dias.append( f"{(i + 1):02d}" + "/" + f"{mes_atual:02d}" + "/" + str(ano_atual))
+    
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    for dias in lista_dias:
+        markup.add(KeyboardButton(dias))
+    return markup
+
 def horarios_disponiveis(data_agendamento):
-    """ horarios = select(f'''
-        SELECT CONVERT(VARCHAR(5), Hora, 108) Hora FROM Horarios H
-        WHERE NOT EXISTS (
-            SELECT A.Id FROM Agendamentos A
-            WHERE CONVERT(VARCHAR(5), A.Data, 108) = CONVERT(VARCHAR(5), H.Hora, 108)
-            AND CONVERT(VARCHAR, A.DATA, 103) = '{data_agendamento}'
-        ) 
-    ''') """
     horarios = select(f'''
         SELECT H."Hora" FROM "Horarios" H
         WHERE NOT EXISTS (

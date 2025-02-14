@@ -3,21 +3,20 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'botagendamentos'
-primary_region = 'gig'
+# fly.toml app configuration file for botagendamentos
+
+app = "botagendamentos"
+primary_region = "gig"
 
 [build]
 
-[http_service]
-  internal_port = 5000
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+# Define que o processo principal do bot será mantido rodando continuamente
+[processes]
+  app = "python main.py"
 
+# Garante que a máquina não seja parada automaticamente
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
+  memory = "1gb"
+  cpu_kind = "shared"
   cpus = 1
   memory_mb = 1024

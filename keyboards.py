@@ -19,10 +19,10 @@ def horarios_disponiveis(data_agendamento):
         ) 
     ''') """
     horarios = select(f'''
-        SELECT TO_CHAR(H."Hora", 'HH24:MI') FROM "Horarios" H
+        SELECT H."Hora" FROM "Horarios" H
         WHERE NOT EXISTS (
             SELECT A."Id" FROM "Agendamentos" A
-            WHERE TO_CHAR(A."Data", 'HH24:MI') = TO_CHAR(H."Hora", 'HH24:MI')
+            WHERE TO_CHAR(A."Data", 'HH24:MI') = H."Hora"
             AND TO_CHAR(A."Data", 'DD/MM/YYYY') = '{data_agendamento}'
         )
     ''')

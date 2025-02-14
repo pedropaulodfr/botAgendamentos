@@ -13,15 +13,10 @@ dados_agendamento = []
 def agendamento_handlers(bot):
     @bot.message_handler(func=lambda message: message.text == "Agendar")
     def agendar(message):
-        bot.send_message(message.chat.id, "Digite seu nome:", reply_markup=ForceReply())
-
-    @bot.message_handler(func=lambda message: message.reply_to_message and message.reply_to_message.text == "Digite seu nome:")
-    def receber_nome(message):
-        nome = message.text
-        dados_agendamento.append(nome) # Adicionando nome à lista
+        dados_agendamento.append(message.from_user.first_name) # Adicionando nome à lista
         bot.send_message(message.chat.id, "Agora digite seu telefone:", reply_markup=ForceReply())
-        bot.register_next_step_handler(message, receber_telefone)
-    
+
+    @bot.message_handler(func=lambda message: message.reply_to_message and message.reply_to_message.text == "Agora digite seu telefone:")
     def receber_telefone(message):
         telefone = str(message.text).replace("(", "").replace(")", "").replace("-", "").replace(" ", "")
         dados_agendamento.append(telefone)

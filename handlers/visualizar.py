@@ -1,4 +1,5 @@
 from database import buscar_agendamentos
+from utils.message import mensagem_restart
 
 def visualizar_handlers(bot):
     @bot.message_handler(func=lambda message: message.text == "Visualizar Agendamento")
@@ -9,3 +10,4 @@ def visualizar_handlers(bot):
         else:
             resposta = "Nenhum agendamento encontrado."
         bot.send_message(message.chat.id, resposta)
+        bot.send_message(message.chat.id, mensagem_restart())
